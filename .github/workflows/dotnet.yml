@@ -5,7 +5,7 @@ name: .NET
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "**" ]
   pull_request:
     branches: [ "master" ]
 
@@ -16,11 +16,11 @@ jobs:
 
     strategy:
       matrix:
-        dotnet: [ '6.0.x' ]
+        dotnet: [ '6.0.x', '8.0.x' ]
     name: .NET ${{ matrix.dotnet }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -28,6 +28,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build ./CoordinateSystems --no-restore
+      run: dotnet build --no-restore
     - name: Test
-      run: dotnet test ./CoordinateSystems --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal

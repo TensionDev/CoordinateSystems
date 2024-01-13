@@ -7,7 +7,7 @@ namespace XUnitTestProjectCoordinateSystems
     public class UnitTestGeographicCoordinateSystem
     {
         [Fact]
-        public void Test1()
+        public void TestDefaultConstructor()
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem();
 
@@ -20,7 +20,7 @@ namespace XUnitTestProjectCoordinateSystems
         }
 
         [Fact]
-        public void Test2()
+        public void TestConstructorWithValues1()
         {
             double latitudeDeg = 30;
             double longitudeDeg = 30;
@@ -45,7 +45,7 @@ namespace XUnitTestProjectCoordinateSystems
         }
 
         [Fact]
-        public void Test3()
+        public void TestConstructorWithValues2()
         {
             double latitudeDeg = -60;
             double longitudeDeg = -90;
@@ -70,7 +70,7 @@ namespace XUnitTestProjectCoordinateSystems
         }
 
         [Fact]
-        public void Test4()
+        public void TestConstructorLimits()
         {
             double latitudeDeg = 90;
             double longitudeDeg = -180;

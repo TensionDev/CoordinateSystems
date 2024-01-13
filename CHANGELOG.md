@@ -8,5 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [v0.1.0-alpha] - 2024-01-13
+[v0.1.0-alpha](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.1.0-alpha)
+
 ### Added
 - Added Geographic coordinate system.
+- Added Geocentric coordinate system.
+- Added Geohash Geocode System.
