@@ -89,7 +89,7 @@ namespace XUnitTestProjectCoordinateSystems
         }
 
         [Fact]
-        public void TestConversion()
+        public void TestToGeographicCoordinateSystem()
         {
             GeographicCoordinateSystem expected = new GeographicCoordinateSystem()
             {
@@ -106,6 +106,24 @@ namespace XUnitTestProjectCoordinateSystems
             Assert.Equal(expected.LatitudeDecimalDegrees, actual.LatitudeDecimalDegrees, LatitudeError5);
             Assert.Equal(expected.LongitudeDecimalDegrees, actual.LongitudeDecimalDegrees, LongitudeError5);
             Assert.Equal(expected.AltitudeMetres, actual.AltitudeMetres);
+        }
+
+        [Fact]
+        public void TestFromGeographicCoordinateSystem()
+        {
+            String geohashString = "u4pruydqqvj";
+            Geohash expected = new Geohash(geohashString);
+
+            GeographicCoordinateSystem value = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = 57.64911,
+                LongitudeDecimalDegrees = 10.40744,
+                AltitudeMetres = 0,
+            };
+
+            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 11);
+
+            Assert.Equal(expected.Hash, actual.Hash);
         }
     }
 }
