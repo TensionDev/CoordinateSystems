@@ -4,19 +4,27 @@ using Xunit;
 
 namespace XUnitTestProjectCoordinateSystems
 {
-    public class UnitTestGeographicCoordinateSystem
+    public class UnitTestGeographicCoordinateSystem : IDisposable
     {
+        private bool disposedValue;
+
+        private const Int32 POSITIONAL_PRECISION = 5;
+
+        public UnitTestGeographicCoordinateSystem()
+        {
+        }
+
         [Fact]
         public void TestDefaultConstructor()
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem();
 
-            Assert.Equal(0, geographicCoordinateSystem.LatitudeDecimalDegrees);
-            Assert.Equal(0, geographicCoordinateSystem.LongitudeDecimalDegrees);
-            Assert.Equal(0, geographicCoordinateSystem.AltitudeMetres);
-            Assert.Equal(0, geographicCoordinateSystem.LatitudeDecimalRadians);
-            Assert.Equal(0, geographicCoordinateSystem.LongitudeDecimalRadians);
-            Assert.Equal(0, geographicCoordinateSystem.AltitudeFeet);
+            Assert.Equal(0, geographicCoordinateSystem.LatitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(0, geographicCoordinateSystem.LongitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(0, geographicCoordinateSystem.AltitudeMetres, POSITIONAL_PRECISION);
+            Assert.Equal(0, geographicCoordinateSystem.LatitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(0, geographicCoordinateSystem.LongitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(0, geographicCoordinateSystem.AltitudeFeet, POSITIONAL_PRECISION);
         }
 
         [Fact]
@@ -36,12 +44,12 @@ namespace XUnitTestProjectCoordinateSystems
                 AltitudeMetres = altitudeMetre,
             };
 
-            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees);
-            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees);
-            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres);
-            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians);
-            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians);
-            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet);
+            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres, POSITIONAL_PRECISION);
+            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet, POSITIONAL_PRECISION);
         }
 
         [Fact]
@@ -61,12 +69,12 @@ namespace XUnitTestProjectCoordinateSystems
                 AltitudeMetres = altitudeMetre,
             };
 
-            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees);
-            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees);
-            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres);
-            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians);
-            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians);
-            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet);
+            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres, POSITIONAL_PRECISION);
+            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet, POSITIONAL_PRECISION);
         }
 
         [Fact]
@@ -86,12 +94,41 @@ namespace XUnitTestProjectCoordinateSystems
                 AltitudeMetres = altitudeMetre,
             };
 
-            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees);
-            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees);
-            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres);
-            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians);
-            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians);
-            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet);
+            Assert.Equal(latitudeDeg, geographicCoordinateSystem.LatitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeDeg, geographicCoordinateSystem.LongitudeDecimalDegrees, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeMetre, geographicCoordinateSystem.AltitudeMetres, POSITIONAL_PRECISION);
+            Assert.Equal(latitudeRad, geographicCoordinateSystem.LatitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(longitudeRad, geographicCoordinateSystem.LongitudeDecimalRadians, POSITIONAL_PRECISION);
+            Assert.Equal(altitudeFeet, geographicCoordinateSystem.AltitudeFeet, POSITIONAL_PRECISION);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~UnitTestGeographicCoordinateSystem()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

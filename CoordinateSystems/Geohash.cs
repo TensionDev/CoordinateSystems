@@ -13,6 +13,7 @@ namespace TensionDev.CoordinateSystems
     public class Geohash
     {
         private const String REGEX_32GHS = "^(?:[0-9b-hj-km-np-z]+)$";
+        private const int REGEX_TIMEOUT_MS = 100;
 
         private String _hash;
 
@@ -43,7 +44,7 @@ namespace TensionDev.CoordinateSystems
                 if (value.Length > 12)
                     throw new ArgumentException($"GeoHash of length {value.Length} is not supported!", nameof(value));
 
-                Match match = Regex.Match(value, REGEX_32GHS);
+                Match match = Regex.Match(value, REGEX_32GHS, RegexOptions.None, TimeSpan.FromMilliseconds(REGEX_TIMEOUT_MS));
                 if (!match.Success)
                     throw new ArgumentException($"{value} is not based on 32ghs!", nameof(value));
 

@@ -4,16 +4,53 @@ using Xunit;
 
 namespace XUnitTestProjectCoordinateSystems
 {
-    public class UnitTestGeocentricCoordinateSystem
+    public class UnitTestGeocentricCoordinateSystem : IDisposable
     {
+        private bool disposedValue;
+
+        private const Int32 POSITIONAL_PRECISION = 5;
+
+        public UnitTestGeocentricCoordinateSystem()
+        {
+        }
+
         [Fact]
-        public void Test1()
+        public void TestDefaultConstructor()
         {
             GeocentricCoordinateSystem geocentricCoordinateSystem = new GeocentricCoordinateSystem();
 
-            Assert.Equal(0, geocentricCoordinateSystem.X);
-            Assert.Equal(0, geocentricCoordinateSystem.Y);
-            Assert.Equal(0, geocentricCoordinateSystem.Z);
+            Assert.Equal(0, geocentricCoordinateSystem.X, POSITIONAL_PRECISION);
+            Assert.Equal(0, geocentricCoordinateSystem.Y, POSITIONAL_PRECISION);
+            Assert.Equal(0, geocentricCoordinateSystem.Z, POSITIONAL_PRECISION);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~UnitTestGeocentricCoordinateSystem()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
