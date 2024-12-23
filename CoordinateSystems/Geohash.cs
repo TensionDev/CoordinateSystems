@@ -13,6 +13,8 @@ namespace TensionDev.CoordinateSystems
     public class Geohash
     {
         private const String REGEX_32GHS = "^(?:[0-9b-hj-km-np-z]+)$";
+        private const int REGEX_TIMEOUT_MS = 100;
+        private const int MAX_HASH_LENGTH = 12;
 
         private String _hash;
 
@@ -40,10 +42,10 @@ namespace TensionDev.CoordinateSystems
                 if (String.IsNullOrWhiteSpace(value))
                     throw new ArgumentNullException(nameof(value));
 
-                if (value.Length > 12)
+                if (value.Length > MAX_HASH_LENGTH)
                     throw new ArgumentException($"GeoHash of length {value.Length} is not supported!", nameof(value));
 
-                Match match = Regex.Match(value, REGEX_32GHS);
+                Match match = Regex.Match(value, REGEX_32GHS, RegexOptions.None, TimeSpan.FromMilliseconds(REGEX_TIMEOUT_MS));
                 if (!match.Success)
                     throw new ArgumentException($"{value} is not based on 32ghs!", nameof(value));
 
@@ -53,8 +55,7 @@ namespace TensionDev.CoordinateSystems
 
         public static Geohash FromGeographicCoordinateSystem(GeographicCoordinateSystem geographicCoordinateSystem, Int32 length)
         {
-            if (length < 0) throw new ArgumentOutOfRangeException($"GeoHash of length {length} is not supported!", nameof(length));
-            if (length > 12) throw new ArgumentOutOfRangeException($"GeoHash of length {length} is not supported!", nameof(length));
+            if (length <= 0 || length > MAX_HASH_LENGTH) throw new ArgumentOutOfRangeException($"GeoHash of length {length} is not supported!", nameof(length));
 
             Int32 bitLength = length * 5;
             UInt64 bitNotation = 0;
@@ -96,7 +97,7 @@ namespace TensionDev.CoordinateSystems
 
         private (BitArray bitNotation, UInt32 length) ToBitNotation()
         {
-            if (_hash.Length > 12)
+            if (_hash.Length > MAX_HASH_LENGTH)
                 throw new InvalidOperationException();
 
             const Int32 baseLength = 5;

@@ -4,8 +4,14 @@ using Xunit;
 
 namespace XUnitTestProjectCoordinateSystems
 {
-    public class UnitTestGeohash
+    public class UnitTestGeohash : IDisposable
     {
+        private bool disposedValue;
+
+        // Geohash Length 1
+        const Double LatitudeError1 = 23;
+        const Double LongitudeError1 = 23;
+
         // Geohash Length 5
         const Double LatitudeError5 = 0.022;
         const Double LongitudeError5 = 0.022;
@@ -13,6 +19,10 @@ namespace XUnitTestProjectCoordinateSystems
         // Geohash Length 8
         const Double LatitudeError8 = 0.000085;
         const Double LongitudeError8 = 0.00017;
+
+        public UnitTestGeohash()
+        {
+        }
 
         [Fact]
         public void TestConstructorNullString()
@@ -109,6 +119,37 @@ namespace XUnitTestProjectCoordinateSystems
         }
 
         [Fact]
+        public void TestFromGeographicCoordinateSystemUnderLimit()
+        {
+            GeographicCoordinateSystem value = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = 57.64911,
+                LongitudeDecimalDegrees = 10.40744,
+                AltitudeMetres = 0,
+            };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => Geohash.FromGeographicCoordinateSystem(value, 0));
+        }
+
+        [Fact]
+        public void TestFromGeographicCoordinateSystemLengthOne()
+        {
+            String geohashString = "m";
+            Geohash expected = new Geohash(geohashString);
+
+            GeographicCoordinateSystem value = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = -22,
+                LongitudeDecimalDegrees = 68,
+                AltitudeMetres = 0,
+            };
+
+            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 1);
+
+            Assert.Equal(expected.Hash, actual.Hash);
+        }
+
+        [Fact]
         public void TestFromGeographicCoordinateSystem()
         {
             String geohashString = "u4pruydqqvj";
@@ -124,6 +165,66 @@ namespace XUnitTestProjectCoordinateSystems
             Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 11);
 
             Assert.Equal(expected.Hash, actual.Hash);
+        }
+
+        [Fact]
+        public void TestFromGeographicCoordinateSystemLengthMax()
+        {
+            String geohashString = "09bhjkmnpz2c";
+            Geohash expected = new Geohash(geohashString);
+
+            GeographicCoordinateSystem value = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = -79.428710,
+                LongitudeDecimalDegrees = -157.262087,
+                AltitudeMetres = 0,
+            };
+
+            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 12);
+
+            Assert.Equal(expected.Hash, actual.Hash);
+        }
+
+        [Fact]
+        public void TestFromGeographicCoordinateSystemOverLimit()
+        {
+            GeographicCoordinateSystem value = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = 57.64911,
+                LongitudeDecimalDegrees = 10.40744,
+                AltitudeMetres = 0,
+            };
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => Geohash.FromGeographicCoordinateSystem(value, 13));
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects)
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
+                // TODO: set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~UnitTestGeohash()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

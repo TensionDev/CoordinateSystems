@@ -9,12 +9,8 @@ namespace TensionDev.CoordinateSystems
     /// </summary>
     public class GeocentricCoordinateSystem
     {
-        private double _x;
-        private double _y;
-        private double _z;
-
-        public double X { get => _x; set => _x = value; }
-        public double Y { get => _y; set => _y = value; }
-        public double Z { get => _z; set => _z = value; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
     }
 }
