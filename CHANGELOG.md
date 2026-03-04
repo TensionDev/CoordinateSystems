@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Changed folder structure to match the TensionDev.CoordinateSystems namespace.
+
+
+## [v0.1.1] - 2024-12-23
+[v0.1.1](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.1.1)
+
+## [v0.1.0] - 2024-01-21
+[v0.1.0](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.1.0)
+
+### Added
+- Added FromGeographicCoordinateSystem function to Geohash.
 
 ## [v0.1.0-alpha] - 2024-01-13
 [v0.1.0-alpha](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.1.0-alpha)

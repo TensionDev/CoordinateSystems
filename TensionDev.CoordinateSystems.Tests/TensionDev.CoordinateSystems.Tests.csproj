@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateSystems\CoordinateSystems.csproj" />
+    <ProjectReference Include="..\TensionDev.CoordinateSystems\TensionDev.CoordinateSystems.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,9 +2,9 @@
 using TensionDev.CoordinateSystems;
 using Xunit;
 
-namespace XUnitTestProjectCoordinateSystems
+namespace TensionDev.CoordinateSystems.Tests
 {
-    public class UnitTestGeohash : IDisposable
+    public class GeohashTests : IDisposable
     {
         private bool disposedValue;
 
@@ -20,7 +20,7 @@ namespace XUnitTestProjectCoordinateSystems
         const Double LatitudeError8 = 0.000085;
         const Double LongitudeError8 = 0.00017;
 
-        public UnitTestGeohash()
+        public GeohashTests()
         {
         }
 
@@ -42,37 +42,13 @@ namespace XUnitTestProjectCoordinateSystems
             Assert.Throws<ArgumentNullException>(() => geohash = new Geohash(geohashString));
         }
 
-        [Fact]
-        public void TestConstructorInvalidLengthString()
+        [Theory]
+        [InlineData("u4pruydqqvjs1")]
+        [InlineData("ezs42a")]
+        [InlineData("lezs42")]
+        [InlineData("iezs42o")]
+        public void TestConstructorInvalidStrings(String geohashString)
         {
-            String geohashString = "u4pruydqqvjs1";
-            Geohash geohash = null;
-
-            Assert.Throws<ArgumentException>(() => geohash = new Geohash(geohashString));
-        }
-
-        [Fact]
-        public void TestConstructorInvalidGeohashEncoding1()
-        {
-            String geohashString = "ezs42a";
-            Geohash geohash = null;
-
-            Assert.Throws<ArgumentException>(() => geohash = new Geohash(geohashString));
-        }
-
-        [Fact]
-        public void TestConstructorInvalidGeohashEncoding2()
-        {
-            String geohashString = "lezs42";
-            Geohash geohash = null;
-
-            Assert.Throws<ArgumentException>(() => geohash = new Geohash(geohashString));
-        }
-
-        [Fact]
-        public void TestConstructorInvalidGeohashEncoding3()
-        {
-            String geohashString = "iezs42o";
             Geohash geohash = null;
 
             Assert.Throws<ArgumentException>(() => geohash = new Geohash(geohashString));
