@@ -2,15 +2,15 @@
 using TensionDev.CoordinateSystems;
 using Xunit;
 
-namespace XUnitTestProjectCoordinateSystems
+namespace TensionDev.CoordinateSystems.Tests
 {
-    public class UnitTestGeocentricCoordinateSystem : IDisposable
+    public class GeocentricCoordinateSystemTests : IDisposable
     {
         private bool disposedValue;
 
         private const Int32 POSITIONAL_PRECISION = 5;
 
-        public UnitTestGeocentricCoordinateSystem()
+        public GeocentricCoordinateSystemTests()
         {
         }
 
