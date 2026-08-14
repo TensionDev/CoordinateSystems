@@ -4,7 +4,7 @@
 [![Package Release](https://github.com/TensionDev/CoordinateSystems/actions/workflows/package-release.yml/badge.svg)](https://github.com/TensionDev/CoordinateSystems/actions/workflows/package-release.yml)
 [![CodeQL](https://github.com/TensionDev/CoordinateSystems/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/TensionDev/CoordinateSystems/actions/workflows/github-code-scanning/codeql)
 
-A .NET library providing tools for conversions between coordinate systems.
+TensionDev.CoordinateSystems is a .NET library providing tools for conversions between coordinate systems.
 
 ## Implementation References
 
