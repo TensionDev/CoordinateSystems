@@ -14,15 +14,6 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-namespace TensionDev.CoordinateSystems
-{
-    /// <summary>
-    /// Geocentric Coordinates
-    /// </summary>
-    public class GeocentricCoordinateSystem
-    {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
-    }
-}
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TensionDev.CoordinateSystems.Tests")]
