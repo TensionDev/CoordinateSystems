@@ -1,6 +1,6 @@
 # ADR-0002: Geographic and Geocentric Conversion
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-12
 
 ## Context

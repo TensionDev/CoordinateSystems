@@ -1,5 +1,4 @@
 ﻿using System;
-using TensionDev.CoordinateSystems;
 using Xunit;
 
 namespace TensionDev.CoordinateSystems.Tests

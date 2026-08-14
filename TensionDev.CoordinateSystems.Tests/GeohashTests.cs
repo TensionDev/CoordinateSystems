@@ -1,5 +1,4 @@
 ﻿using System;
-using TensionDev.CoordinateSystems;
 using Xunit;
 
 namespace TensionDev.CoordinateSystems.Tests
@@ -67,7 +66,7 @@ namespace TensionDev.CoordinateSystems.Tests
             String geohashString = "w21z3w6ecruf";
             Geohash geohash = new Geohash(geohashString);
 
-            GeographicCoordinateSystem actual = geohash.ToGeographicCoordinateSystem();
+            GeographicCoordinateSystem actual = GeographicConverter.From(geohash);
 
             Assert.Equal(expected.LatitudeDecimalDegrees, actual.LatitudeDecimalDegrees, LatitudeError8);
             Assert.Equal(expected.LongitudeDecimalDegrees, actual.LongitudeDecimalDegrees, LongitudeError8);
@@ -75,7 +74,7 @@ namespace TensionDev.CoordinateSystems.Tests
         }
 
         [Fact]
-        public void TestToGeographicCoordinateSystem()
+        public void TestGeographicConverterFromGeohash()
         {
             GeographicCoordinateSystem expected = new GeographicCoordinateSystem()
             {
@@ -87,7 +86,7 @@ namespace TensionDev.CoordinateSystems.Tests
             String geohashString = "ezs42";
             Geohash geohash = new Geohash(geohashString);
 
-            GeographicCoordinateSystem actual = geohash.ToGeographicCoordinateSystem();
+            GeographicCoordinateSystem actual = GeographicConverter.From(geohash);
 
             Assert.Equal(expected.LatitudeDecimalDegrees, actual.LatitudeDecimalDegrees, LatitudeError5);
             Assert.Equal(expected.LongitudeDecimalDegrees, actual.LongitudeDecimalDegrees, LongitudeError5);
@@ -95,7 +94,7 @@ namespace TensionDev.CoordinateSystems.Tests
         }
 
         [Fact]
-        public void TestFromGeographicCoordinateSystemUnderLimit()
+        public void TestGeohashConverterFromGeographicCoordinateSystemUnderLimit()
         {
             GeographicCoordinateSystem value = new GeographicCoordinateSystem()
             {
@@ -104,11 +103,11 @@ namespace TensionDev.CoordinateSystems.Tests
                 AltitudeMetres = 0,
             };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => Geohash.FromGeographicCoordinateSystem(value, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => GeohashConverter.From(value, 0));
         }
 
         [Fact]
-        public void TestFromGeographicCoordinateSystemLengthOne()
+        public void TestGeohashConverterFromGeographicCoordinateSystemLengthOne()
         {
             String geohashString = "m";
             Geohash expected = new Geohash(geohashString);
@@ -120,13 +119,13 @@ namespace TensionDev.CoordinateSystems.Tests
                 AltitudeMetres = 0,
             };
 
-            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 1);
+            Geohash actual = GeohashConverter.From(value, 1);
 
             Assert.Equal(expected.Hash, actual.Hash);
         }
 
         [Fact]
-        public void TestFromGeographicCoordinateSystem()
+        public void TestGeohashConverterFromGeographicCoordinateSystem()
         {
             String geohashString = "u4pruydqqvj";
             Geohash expected = new Geohash(geohashString);
@@ -138,13 +137,13 @@ namespace TensionDev.CoordinateSystems.Tests
                 AltitudeMetres = 0,
             };
 
-            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 11);
+            Geohash actual = GeohashConverter.From(value, 11);
 
             Assert.Equal(expected.Hash, actual.Hash);
         }
 
         [Fact]
-        public void TestFromGeographicCoordinateSystemLengthMax()
+        public void TestGeohashConverterFromGeographicCoordinateSystemLengthMax()
         {
             String geohashString = "09bhjkmnpz2c";
             Geohash expected = new Geohash(geohashString);
@@ -156,13 +155,13 @@ namespace TensionDev.CoordinateSystems.Tests
                 AltitudeMetres = 0,
             };
 
-            Geohash actual = Geohash.FromGeographicCoordinateSystem(value, 12);
+            Geohash actual = GeohashConverter.From(value, 12);
 
             Assert.Equal(expected.Hash, actual.Hash);
         }
 
         [Fact]
-        public void TestFromGeographicCoordinateSystemOverLimit()
+        public void TestGeohashConverterFromGeographicCoordinateSystemOverLimit()
         {
             GeographicCoordinateSystem value = new GeographicCoordinateSystem()
             {
@@ -171,7 +170,26 @@ namespace TensionDev.CoordinateSystems.Tests
                 AltitudeMetres = 0,
             };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => Geohash.FromGeographicCoordinateSystem(value, 13));
+            Assert.Throws<ArgumentOutOfRangeException>(() => GeohashConverter.From(value, 13));
+        }
+
+        [Fact]
+        public void TestGeographicConverterFromGeohashViaDestinationConverter()
+        {
+            GeographicCoordinateSystem expected = new GeographicCoordinateSystem()
+            {
+                LatitudeDecimalDegrees = 42.605,
+                LongitudeDecimalDegrees = -5.603,
+                AltitudeMetres = 0,
+            };
+
+            Geohash geohash = new Geohash("ezs42");
+
+            GeographicCoordinateSystem actual = GeographicConverter.From(geohash);
+
+            Assert.Equal(expected.LatitudeDecimalDegrees, actual.LatitudeDecimalDegrees, LatitudeError5);
+            Assert.Equal(expected.LongitudeDecimalDegrees, actual.LongitudeDecimalDegrees, LongitudeError5);
+            Assert.Equal(expected.AltitudeMetres, actual.AltitudeMetres);
         }
 
         protected virtual void Dispose(bool disposing)

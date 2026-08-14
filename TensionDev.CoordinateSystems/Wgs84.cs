@@ -16,13 +16,14 @@
 
 namespace TensionDev.CoordinateSystems
 {
-    /// <summary>
-    /// Geocentric Coordinates
-    /// </summary>
-    public class GeocentricCoordinateSystem
+    internal static class Wgs84
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        internal const double SemiMajorAxisMetres = 6378137.0;
+        internal const double InverseFlattening = 298.257223563;
+        internal const double Flattening = 1.0 / InverseFlattening;
+        internal const double SemiMinorAxisMetres = SemiMajorAxisMetres * (1.0 - Flattening);
+        internal const double FirstEccentricitySquared = Flattening * (2.0 - Flattening);
+        internal const double SecondEccentricitySquared =
+            FirstEccentricitySquared / (1.0 - FirstEccentricitySquared);
     }
 }
