@@ -31,4 +31,4 @@ Conversion support is added independently from the coordinate model types.
 
 ## License
 
-This project is currently licensed under GPL-3.0. Any future licensing change will be documented separately.
+This project is currently licensed under Apache-2.0. Any future licensing change will be documented separately.
