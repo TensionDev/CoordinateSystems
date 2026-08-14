@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Changed license from GNU General Public License Version 3 to Apache License Version 2.0.
 - Changed folder structure to match the TensionDev.CoordinateSystems namespace.
 
 

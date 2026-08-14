@@ -4,21 +4,24 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>TensionDev.CoordinateSystems</AssemblyName>
     <RootNamespace>TensionDev.CoordinateSystems</RootNamespace>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageId>TensionDev.CoordinateSystems</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>TensionDev amsga</Authors>
     <Company>TensionDev</Company>
     <Product>TensionDev.CoordinateSystems</Product>
-    <Description>A project to provide tools for conversions between Coordinate Systems.</Description>
+    <Description>TensionDev.CoordinateSystems is a .NET library providing tools for conversions between coordinate systems.</Description>
     <Copyright>Copyright (c) TensionDev 2021 - 2026</Copyright>
-    <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/TensionDev/CoordinateSystems</PackageProjectUrl>
     <RepositoryUrl>https://github.com/TensionDev/CoordinateSystems</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>CoordinateSystems Geohash</PackageTags>
-    <PackageReleaseNotes>Initial project release</PackageReleaseNotes>
+    <PackageTags>CoordinateSystems Geohash Geocentric</PackageTags>
+    <PackageReleaseNotes>Change in license to Apache License 2.0.</PackageReleaseNotes>
     <NeutralLanguage>en-SG</NeutralLanguage>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
