@@ -21,8 +21,19 @@ namespace TensionDev.CoordinateSystems
     /// </summary>
     public class GeocentricCoordinateSystem
     {
+        /// <summary>
+        /// X coordinate in Metres.
+        /// </summary>
         public double X { get; set; }
+
+        /// <summary>
+        /// Y coordinate in Metres.
+        /// </summary>
         public double Y { get; set; }
+
+        /// <summary>
+        /// Z coordinate in Metres.
+        /// </summary>
         public double Z { get; set; }
     }
 }
