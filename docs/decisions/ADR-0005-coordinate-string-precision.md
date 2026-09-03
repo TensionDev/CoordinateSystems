@@ -1,6 +1,6 @@
 # ADR-0005: Coordinate String Precision
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-29
 
 ## Context

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added new ToString methods.
+
 
 ## [v0.2.0] - 2024-12-23
 [v0.2.0](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.2.0)

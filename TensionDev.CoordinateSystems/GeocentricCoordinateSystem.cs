@@ -15,6 +15,7 @@
 //   limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace TensionDev.CoordinateSystems
@@ -43,28 +44,33 @@ namespace TensionDev.CoordinateSystems
         /// Returns a string representation of the geocentric coordinate system using the specified distance unit.
         /// </summary>
         /// <param name="distanceUnit">The distance unit to use for X, Y and Z coordinates</param>
+        /// <param name="distancePrecision">The number of decimal places for distance values (default 3, maximum 6)</param>
         /// <returns>A formatted string representation of the geocentric coordinate system</returns>
-        public string ToString(DistanceUnit distanceUnit = DistanceUnit.Metres)
+        public string ToString(DistanceUnit distanceUnit = DistanceUnit.Metres, int distancePrecision = 3)
         {
+            int clampedDistancePrecision = Math.Min(distancePrecision, 6);
+
             switch (distanceUnit)
             {
                 case DistanceUnit.Metres:
-                    return ToStringMetres();
+                    return ToStringMetres(clampedDistancePrecision);
                 case DistanceUnit.Feet:
-                    return ToStringFeet();
+                    return ToStringFeet(clampedDistancePrecision);
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        internal string ToStringMetres()
+        internal string ToStringMetres(int distancePrecision)
         {
-            return $"X: {X:F2} m, Y: {Y:F2} m, Z: {Z:F2} m";
+            string format = "F" + distancePrecision;
+            return $"X: {X.ToString(format, CultureInfo.InvariantCulture)} m, Y: {Y.ToString(format, CultureInfo.InvariantCulture)} m, Z: {Z.ToString(format, CultureInfo.InvariantCulture)} m";
         }
 
-        internal string ToStringFeet()
+        internal string ToStringFeet(int distancePrecision)
         {
-            return $"X: {X / 0.3048:F2} ft, Y: {Y / 0.3048:F2} ft, Z: {Z / 0.3048:F2} ft";
+            string format = "F" + distancePrecision;
+            return $"X: {(X / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft, Y: {(Y / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft, Z: {(Z / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft";
         }
     }
 }
