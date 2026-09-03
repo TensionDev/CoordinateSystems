@@ -8,11 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.3.0] - 2026-09-03
+[v0.3.0](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.3.0)
+
 ### Added
 - Added new ToString methods.
 
-
-## [v0.2.0] - 2024-12-23
+## [v0.2.0] - 2026-08-15
 [v0.2.0](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.2.0)
 
 ### Added
@@ -23,7 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Changed license from GNU General Public License Version 3 to Apache License Version 2.0.
 - Changed folder structure to match the TensionDev.CoordinateSystems namespace.
-
 
 ## [v0.1.1] - 2024-12-23
 [v0.1.1](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.1.1)
