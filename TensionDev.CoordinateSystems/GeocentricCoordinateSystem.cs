@@ -14,6 +14,9 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
+using System;
+using System.Text;
+
 namespace TensionDev.CoordinateSystems
 {
     /// <summary>
@@ -35,5 +38,33 @@ namespace TensionDev.CoordinateSystems
         /// Z coordinate in Metres.
         /// </summary>
         public double Z { get; set; }
+
+        /// <summary>
+        /// Returns a string representation of the geocentric coordinate system using the specified distance unit.
+        /// </summary>
+        /// <param name="distanceUnit">The distance unit to use for X, Y and Z coordinates</param>
+        /// <returns>A formatted string representation of the geocentric coordinate system</returns>
+        public string ToString(DistanceUnit distanceUnit = DistanceUnit.Metres)
+        {
+            switch (distanceUnit)
+            {
+                case DistanceUnit.Metres:
+                    return ToStringMetres();
+                case DistanceUnit.Feet:
+                    return ToStringFeet();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        internal string ToStringMetres()
+        {
+            return $"X: {X:F2} m, Y: {Y:F2} m, Z: {Z:F2} m";
+        }
+
+        internal string ToStringFeet()
+        {
+            return $"X: {X / 0.3048:F2} ft, Y: {Y / 0.3048:F2} ft, Z: {Z / 0.3048:F2} ft";
+        }
     }
 }
