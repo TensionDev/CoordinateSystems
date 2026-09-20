@@ -27,7 +27,7 @@ Conversion support is added independently from the coordinate model types.
 ## Documentation
 
 - [Architecture](docs/Architecture.md)
-- [Architecture Decisions](docs/decisions/)
+- [Architecture Decisions](docs/adr/)
 
 ## License
 
