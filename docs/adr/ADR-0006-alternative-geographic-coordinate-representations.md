@@ -1,9 +1,9 @@
-ADR-0006: Alternative Geographic Coordinate Representations
+# ADR-0006: Alternative Geographic Coordinate Representations
 
-* Status: Proposed
-* Date: 2026-09-03
+- **Status:** Accepted
+- **Date:** 2026-09-03
 
-Context
+## Context
 
 Geographic represents a geographic point using decimal degrees for latitude and longitude. This provides the canonical numerical representation used by the library.
 
@@ -16,11 +16,11 @@ are commonly used when presenting coordinates to users.
 
 These representations contain numerical components that are useful independently of their formatted string representation. For example, a user interface may need to display the degree, minute, and second components separately rather than consume the result of ToString().
 
-Storing these derived components directly within Geographic would duplicate information already represented by the coordinate’s decimal-degree value and introduce unnecessary state.
+Storing these derived components directly within Geographic would duplicate information already represented by the coordinate's decimal-degree value and introduce unnecessary state.
 
 Returning tuples or multiple primitive values from conversion methods would provide the numerical data, but would not provide a named representation with clear domain meaning or a natural place for validation and future behaviour.
 
-Decision
+## Decision
 
 Alternative geographic coordinate representations will be represented by dedicated models:
 
@@ -38,9 +38,9 @@ The alternative representation models SHALL expose their numerical components di
 
 Formatted output, including ToString(), remains a presentation concern and SHALL NOT be the sole mechanism for accessing the component values.
 
-Consequences
+## Consequences
 
-Positive
+### Positive
 
 * Geographic remains a simple canonical representation of a geographic point.
 * Derived coordinate components are not duplicated or subject to synchronization issues.
@@ -49,35 +49,37 @@ Positive
 * The models provide a natural location for validation and representation-specific behaviour.
 * Additional coordinate representations can be introduced later without expanding Geographic with representation-specific properties.
 
-Negative
+### Negative
 
 * Additional types are introduced for DDM and DMS representations.
 * Conversion creates an additional object/value rather than exposing every representation directly from Geographic.
 * Consumers need to choose the appropriate representation when converting coordinates.
 
-Alternatives Considered
+## Alternatives Considered
 
-Returning tuples or multiple primitive values
+### Returning tuples or multiple primitive values
 
 Conversion could return tuples such as:
 
+```csharp
 (double degrees, double minutes, double seconds)
+```
 
 This was rejected because the returned values have domain-specific meaning and are better represented by a named type. A dedicated model also provides a place for validation and future representation-specific behaviour.
 
-Storing all representations in Geographic
+### Storing all representations in Geographic
 
 Geographic could contain decimal degrees, decimal minutes, and DMS components simultaneously.
 
 This was rejected because DDM and DMS are derived representations of the same underlying coordinate. Storing them would duplicate state without providing additional source-of-truth information.
 
-Using ToString() as the representation
+### Using ToString() as the representation
 
 Consumers could obtain DDM/DMS components by parsing the formatted coordinate string.
 
 This was rejected because formatted text is presentation output, not a suitable data interface for programmatic consumers.
 
-Scope
+## Scope
 
 This decision covers the representation of geographic points in:
 
