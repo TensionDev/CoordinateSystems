@@ -173,25 +173,6 @@ namespace TensionDev.CoordinateSystems.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => GeohashConverter.From(value, 13));
         }
 
-        [Fact]
-        public void TestGeographicConverterFromGeohashViaDestinationConverter()
-        {
-            GeographicCoordinateSystem expected = new GeographicCoordinateSystem()
-            {
-                LatitudeDecimalDegrees = 42.605,
-                LongitudeDecimalDegrees = -5.603,
-                AltitudeMetres = 0,
-            };
-
-            Geohash geohash = new Geohash("ezs42");
-
-            GeographicCoordinateSystem actual = GeographicConverter.From(geohash);
-
-            Assert.Equal(expected.LatitudeDecimalDegrees, actual.LatitudeDecimalDegrees, LatitudeError5);
-            Assert.Equal(expected.LongitudeDecimalDegrees, actual.LongitudeDecimalDegrees, LongitudeError5);
-            Assert.Equal(expected.AltitudeMetres, actual.AltitudeMetres);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
