@@ -86,21 +86,54 @@ namespace TensionDev.CoordinateSystems
             return BitNotationDivisions(bitNotation, length);
         }
 
-        /// <summary>
-        /// Converts geographic coordinates to a degrees and decimal minutes (DDM) representation.
-        /// </summary>
-        /// <param name="source">The geographic coordinates to convert.</param>
-        /// <returns>A <see cref="GeographicDdm"/> representing the same position in DDM.</returns>
-        public static GeographicDdm ToDdm(GeographicCoordinateSystem source)
+        /// <summary>Converts the canonical geographic model to decimal degrees.</summary>
+        public static GeographicDd ToDd(GeographicCoordinateSystem source)
         {
-            if (source == null)
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return new GeographicDd
             {
-                throw new ArgumentNullException(nameof(source));
-            }
+                LatitudeDecimalDegrees = source.LatitudeDecimalDegrees,
+                LongitudeDecimalDegrees = source.LongitudeDecimalDegrees,
+                AltitudeMetres = source.AltitudeMetres,
+            };
+        }
 
+        /// <summary>Converts decimal-degree coordinates to the canonical radians-based model.</summary>
+        public static GeographicCoordinateSystem From(GeographicDd source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return new GeographicCoordinateSystem
+            {
+                LatitudeDecimalDegrees = source.LatitudeDecimalDegrees,
+                LongitudeDecimalDegrees = source.LongitudeDecimalDegrees,
+                AltitudeMetres = source.AltitudeMetres,
+            };
+        }
+
+        /// <summary>Converts DDM coordinates to decimal degrees.</summary>
+        public static GeographicDd ToDd(GeographicDdm source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return new GeographicDd
+            {
+                LatitudeDecimalDegrees = Recompose(source.LatitudeDegrees, source.LatitudeMinutes, source.LatitudeDirection, true),
+                LongitudeDecimalDegrees = Recompose(source.LongitudeDegrees, source.LongitudeMinutes, source.LongitudeDirection, false),
+                AltitudeMetres = source.AltitudeMetres,
+            };
+        }
+
+        /// <summary>Converts DMS coordinates to decimal degrees through DDM.</summary>
+        public static GeographicDd ToDd(GeographicDms source) => ToDd(ToDdm(source));
+
+        /// <summary>Converts a geographic coordinate to DDM.</summary>
+        public static GeographicDdm ToDdm(GeographicCoordinateSystem source) => ToDdm(ToDd(source));
+
+        /// <summary>Converts decimal-degree coordinates to DDM.</summary>
+        public static GeographicDdm ToDdm(GeographicDd source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
             (double latDegrees, double latMinutes, char latDirection) = Decompose(source.LatitudeDecimalDegrees, true);
             (double lonDegrees, double lonMinutes, char lonDirection) = Decompose(source.LongitudeDecimalDegrees, false);
-
             return new GeographicDdm
             {
                 LatitudeDegrees = latDegrees,
@@ -109,108 +142,70 @@ namespace TensionDev.CoordinateSystems
                 LongitudeDegrees = lonDegrees,
                 LongitudeMinutes = lonMinutes,
                 LongitudeDirection = lonDirection,
+                AltitudeMetres = source.AltitudeMetres,
             };
         }
 
-        /// <summary>
-        /// Converts geographic coordinates to a degrees, minutes, and seconds (DMS) representation.
-        /// </summary>
-        /// <param name="source">The geographic coordinates to convert.</param>
-        /// <returns>A <see cref="GeographicDms"/> representing the same position in DMS.</returns>
-        public static GeographicDms ToDms(GeographicCoordinateSystem source)
+        /// <summary>Converts DMS coordinates to DDM.</summary>
+        public static GeographicDdm ToDdm(GeographicDms source)
         {
-            if (source == null)
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return new GeographicDdm
             {
-                throw new ArgumentNullException(nameof(source));
-            }
+                LatitudeDegrees = source.LatitudeDegrees,
+                LatitudeMinutes = source.LatitudeMinutes + source.LatitudeSeconds / 60.0,
+                LatitudeDirection = source.LatitudeDirection,
+                LongitudeDegrees = source.LongitudeDegrees,
+                LongitudeMinutes = source.LongitudeMinutes + source.LongitudeSeconds / 60.0,
+                LongitudeDirection = source.LongitudeDirection,
+                AltitudeMetres = source.AltitudeMetres,
+            };
+        }
 
-            (double latDegrees, double latMinutes, double latSeconds, char latDirection) = DecomposeWithSeconds(source.LatitudeDecimalDegrees, true);
-            (double lonDegrees, double lonMinutes, double lonSeconds, char lonDirection) = DecomposeWithSeconds(source.LongitudeDecimalDegrees, false);
+        /// <summary>Converts a geographic coordinate to DMS.</summary>
+        public static GeographicDms ToDms(GeographicCoordinateSystem source) => ToDms(ToDd(source));
+
+        /// <summary>Converts decimal-degree coordinates to DMS through DDM.</summary>
+        public static GeographicDms ToDms(GeographicDd source) => ToDms(ToDdm(source));
+
+        /// <summary>Converts DDM coordinates to DMS.</summary>
+        public static GeographicDms ToDms(GeographicDdm source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            double latitudeWholeMinutes = Math.Truncate(source.LatitudeMinutes);
+            double longitudeWholeMinutes = Math.Truncate(source.LongitudeMinutes);
 
             return new GeographicDms
             {
-                LatitudeDegrees = latDegrees,
-                LatitudeMinutes = latMinutes,
-                LatitudeSeconds = latSeconds,
-                LatitudeDirection = latDirection,
-                LongitudeDegrees = lonDegrees,
-                LongitudeMinutes = lonMinutes,
-                LongitudeSeconds = lonSeconds,
-                LongitudeDirection = lonDirection,
+                LatitudeDegrees = source.LatitudeDegrees,
+                LatitudeMinutes = latitudeWholeMinutes,
+                LatitudeSeconds = (source.LatitudeMinutes - latitudeWholeMinutes) * 60.0,
+                LatitudeDirection = source.LatitudeDirection,
+                LongitudeDegrees = source.LongitudeDegrees,
+                LongitudeMinutes = longitudeWholeMinutes,
+                LongitudeSeconds = (source.LongitudeMinutes - longitudeWholeMinutes) * 60.0,
+                LongitudeDirection = source.LongitudeDirection,
+                AltitudeMetres = source.AltitudeMetres,
             };
         }
 
-        /// <summary>
-        /// Converts a degrees and decimal minutes (DDM) representation to geographic coordinates.
-        /// </summary>
-        /// <param name="source">The DDM representation to convert.</param>
-        /// <returns>The converted geographic coordinates.</returns>
-        public static GeographicCoordinateSystem FromDdm(GeographicDdm source)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+        /// <summary>Converts DDM coordinates to the canonical geographic model.</summary>
+        public static GeographicCoordinateSystem FromDdm(GeographicDdm source) => From(ToDd(source));
 
-            double latitudeDecimalDegrees = Recompose(source.LatitudeDegrees, source.LatitudeMinutes, source.LatitudeDirection, true);
-            double longitudeDecimalDegrees = Recompose(source.LongitudeDegrees, source.LongitudeMinutes, source.LongitudeDirection, false);
-
-            return new GeographicCoordinateSystem
-            {
-                LatitudeDecimalDegrees = latitudeDecimalDegrees,
-                LongitudeDecimalDegrees = longitudeDecimalDegrees,
-            };
-        }
-
-        /// <summary>
-        /// Converts a degrees, minutes, and seconds (DMS) representation to geographic coordinates.
-        /// </summary>
-        /// <param name="source">The DMS representation to convert.</param>
-        /// <returns>The converted geographic coordinates.</returns>
-        public static GeographicCoordinateSystem FromDms(GeographicDms source)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            double latitudeDecimalDegrees = RecomposeWithSeconds(source.LatitudeDegrees, source.LatitudeMinutes, source.LatitudeSeconds, source.LatitudeDirection, true);
-            double longitudeDecimalDegrees = RecomposeWithSeconds(source.LongitudeDegrees, source.LongitudeMinutes, source.LongitudeSeconds, source.LongitudeDirection, false);
-
-            return new GeographicCoordinateSystem
-            {
-                LatitudeDecimalDegrees = latitudeDecimalDegrees,
-                LongitudeDecimalDegrees = longitudeDecimalDegrees,
-            };
-        }
+        /// <summary>Converts DMS coordinates to the canonical geographic model.</summary>
+        public static GeographicCoordinateSystem FromDms(GeographicDms source) => From(ToDd(source));
 
         private static double Recompose(double degrees, double minutes, char direction, bool isLatitude)
         {
             double absoluteDegrees = degrees + minutes / 60.0;
 
-            if (isLatitude && direction == 'S')
+            if (isLatitude && char.ToUpperInvariant(direction) == 'S')
             {
                 return -absoluteDegrees;
             }
 
-            if (!isLatitude && direction == 'W')
-            {
-                return -absoluteDegrees;
-            }
-
-            return absoluteDegrees;
-        }
-
-        private static double RecomposeWithSeconds(double degrees, double minutes, double seconds, char direction, bool isLatitude)
-        {
-            double absoluteDegrees = degrees + minutes / 60.0 + seconds / 3600.0;
-
-            if (isLatitude && direction == 'S')
-            {
-                return -absoluteDegrees;
-            }
-
-            if (!isLatitude && direction == 'W')
+            if (!isLatitude && char.ToUpperInvariant(direction) == 'W')
             {
                 return -absoluteDegrees;
             }
@@ -228,26 +223,9 @@ namespace TensionDev.CoordinateSystems
 
             char direction = isLatitude ?
                 (isNegative ? 'S' : 'N') :
-                (degreesInt == 180 ? 'W' : (isNegative ? 'W' : 'E'));
+                (isNegative ? 'W' : 'E');
 
             return ((double)degreesInt, minutes, direction);
-        }
-
-        private static (double degrees, double minutes, double seconds, char direction) DecomposeWithSeconds(double degrees, bool isLatitude)
-        {
-            bool isNegative = degrees < 0;
-            double absDegrees = Math.Abs(degrees);
-
-            int degreesInt = (int)absDegrees;
-            double minutesDouble = (absDegrees - degreesInt) * 60.0;
-            int minutesInt = (int)minutesDouble;
-            double seconds = (minutesDouble - minutesInt) * 60.0;
-
-            char direction = isLatitude ?
-                (isNegative ? 'S' : 'N') :
-                (degreesInt == 180 ? 'W' : (isNegative ? 'W' : 'E'));
-
-            return ((double)degreesInt, (double)minutesInt, seconds, direction);
         }
 
         private static GeographicCoordinateSystem FromPolarAxis(double z, double longitude)
