@@ -72,5 +72,106 @@ namespace TensionDev.CoordinateSystems
             string format = "F" + distancePrecision;
             return $"X: {(X / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft, Y: {(Y / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft, Z: {(Z / 0.3048).ToString(format, CultureInfo.InvariantCulture)} ft";
         }
+
+        /// <summary>
+        /// Parses a geocentric coordinate string into a <see cref="GeocentricCoordinateSystem"/> instance.
+        /// </summary>
+        /// <param name="s">A string in geocentric format (e.g., "X: 1000.000 m, Y: 2000.000 m, Z: 3000.000 m" or with feet units).</param>
+        /// <returns>A <see cref="GeocentricCoordinateSystem"/> parsed from the string.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the string is null.</exception>
+        /// <exception cref="FormatException">Thrown when the string is not in a valid geocentric format.</exception>
+        public static GeocentricCoordinateSystem Parse(string s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                throw new FormatException("Input string was null or whitespace.");
+            }
+
+            if (!TryParse(s, out var result))
+            {
+                throw new FormatException($"String '{s}' is not in a valid geocentric format.");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Attempts to parse a geocentric coordinate string into a <see cref="GeocentricCoordinateSystem"/> instance.
+        /// </summary>
+        /// <param name="s">A string in geocentric format.</param>
+        /// <param name="result">When this method returns, contains the parsed <see cref="GeocentricCoordinateSystem"/> or default on failure.</param>
+        /// <returns>True if the string was parsed successfully; false otherwise.</returns>
+        public static bool TryParse(string s, out GeocentricCoordinateSystem result)
+        {
+            result = new GeocentricCoordinateSystem();
+
+            if (s == null || string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
+
+            // Split by comma first to extract X, Y, Z coordinate segments.
+            var segments = s.Split(',');
+            if (segments.Length != 3)
+            {
+                return false;
+            }
+
+            double[] values = new double[3];
+            string[] expectedAxes = { "X", "Y", "Z" };
+            string commonUnit = null;
+
+            for (int i = 0; i < 3; i++)
+            {
+                string segment = segments[i].Trim();
+                int colonIdx = segment.IndexOf(':');
+                if (colonIdx < 0 || !string.Equals(segment.Substring(0, colonIdx).Trim(), expectedAxes[i], StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                string[] valueAndUnit = segment.Substring(colonIdx + 1).Trim().Split((char[])null, StringSplitOptions.RemoveEmptyEntries);
+                if (valueAndUnit.Length != 2)
+                {
+                    return false;
+                }
+
+                string unit = valueAndUnit[1];
+                if (!string.Equals(unit, "m", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(unit, "ft", StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                if (commonUnit != null && !string.Equals(unit, commonUnit, StringComparison.OrdinalIgnoreCase))
+                {
+                    return false;
+                }
+
+                commonUnit = unit;
+
+                if (!double.TryParse(valueAndUnit[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
+                {
+                    return false;
+                }
+
+                // One international foot is exactly 0.3048 metres.
+                values[i] = string.Equals(unit, "ft", StringComparison.OrdinalIgnoreCase) ? value * 0.3048 : value;
+            }
+
+            result = new GeocentricCoordinateSystem
+            {
+                X = values[0],
+                Y = values[1],
+                Z = values[2]
+            };
+
+            return true;
+        }
     }
 }

@@ -27,6 +27,16 @@ namespace TensionDev.CoordinateSystems
         private double _latitudeDegrees;
         private double _longitudeDegrees;
 
+        /// <summary>Altitude in metres.</summary>
+        public double AltitudeMetres { get; set; }
+
+        /// <summary>Altitude in feet.</summary>
+        public double AltitudeFeet
+        {
+            get => AltitudeMetres / 0.3048;
+            set => AltitudeMetres = value * 0.3048;
+        }
+
         /// <summary>
         /// Latitude degrees (0-90). Always non-negative; direction is indicated by <see cref="LatitudeDirection"/>.
         /// </summary>
@@ -137,12 +147,280 @@ namespace TensionDev.CoordinateSystems
                 if (Math.Abs(lonMinutes) < precisionUnit) lonMinutes = 0.0; // avoid -0.000000
             }
 
-            return FormatDms(latDegrees, latMinutes, latSeconds, latDirection, precisionFormat) + ", " + FormatDms(lonDegrees, lonMinutes, lonSeconds, lonDirection, precisionFormat);
+            string text = FormatDms(latDegrees, latMinutes, latSeconds, latDirection, precisionFormat) + ", " + FormatDms(lonDegrees, lonMinutes, lonSeconds, lonDirection, precisionFormat);
+            return text + GeographicCoordinateSystem.FormatAltitude(AltitudeMetres, DistanceUnit.Metres, 3);
         }
 
         private static string FormatDms(double degrees, double minutes, double seconds, char direction, string precisionFormat)
         {
             return degrees + "° " + minutes.ToString("F0", CultureInfo.InvariantCulture) + "' " + seconds.ToString(precisionFormat, CultureInfo.InvariantCulture) + "\" " + direction;
         }
+
+        /// <summary>
+        /// Parses a DMS-formatted string into a <see cref="GeographicDms"/> instance.
+        /// </summary>
+        /// <param name="s">A string in DMS format (e.g., "52° 31' 12.00\" N, 13° 24' 18.00\" E" or with optional altitude suffix).</param>
+        /// <returns>A <see cref="GeographicDms"/> parsed from the string.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the string is null.</exception>
+        /// <exception cref="FormatException">Thrown when the string is not in a valid DMS format or values are out of range.</exception>
+        public static GeographicDms Parse(string s)
+        {
+            if (s == null)
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                throw new FormatException("Input string was null or whitespace.");
+            }
+
+            if (!TryParse(s, out var result))
+            {
+                throw new FormatException($"String '{s}' is not in a valid DMS format.");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Attempts to parse a DMS-formatted string into a <see cref="GeographicDms"/> instance.
+        /// </summary>
+        /// <param name="s">A string in DMS format.</param>
+        /// <param name="result">When this method returns, contains the parsed <see cref="GeographicDms"/> or default on failure.</param>
+        /// <returns>True if the string was parsed successfully; false otherwise.</returns>
+        public static bool TryParse(string s, out GeographicDms result)
+        {
+            result = default;
+
+            if (s == null || string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
+
+            string body = s.Trim();
+            if (!GeographicAltitudeParser.TryExtractAltitude(ref body, out double altitudeMetres))
+            {
+                return false;
+            }
+            var parsed = new GeographicDms();
+
+            // Parse the DMS body: "lat deg min sec" dir, lon deg min sec" dir"
+            // Split by comma to separate latitude and longitude
+            int commaIdx = body.IndexOf(',');
+            if (commaIdx < 0)
+            {
+                return false;
+            }
+
+            string latPart = body.Substring(0, commaIdx).Trim();
+            string lonPart = body.Substring(commaIdx + 1).Trim();
+
+            if (!TryParseDmsCoordinate(latPart, isLatitude: true, out double latDegrees, out double latMinutes, out double latSeconds, out char latDir))
+            {
+                return false;
+            }
+
+            if (!TryParseDmsCoordinate(lonPart, isLatitude: false, out double lonDegrees, out double lonMinutes, out double lonSeconds, out char lonDir))
+            {
+                return false;
+            }
+
+            // Normalize seconds >= 60 to carry over to minutes
+            if (latSeconds >= 60.0)
+            {
+                latMinutes += Math.Floor(latSeconds / 60.0);
+                latSeconds = latSeconds % 60.0;
+            }
+
+            if (lonSeconds >= 60.0)
+            {
+                lonMinutes += Math.Floor(lonSeconds / 60.0);
+                lonSeconds = lonSeconds % 60.0;
+            }
+
+            // Normalize minutes >= 60 to carry over to degrees
+            if (latMinutes >= 60.0)
+            {
+                latDegrees += Math.Floor(latMinutes / 60.0);
+                latMinutes = latMinutes % 60.0;
+            }
+
+            if (lonMinutes >= 60.0)
+            {
+                lonDegrees += Math.Floor(lonMinutes / 60.0);
+                lonMinutes = lonMinutes % 60.0;
+            }
+
+            if (latDegrees < 0.0 || latDegrees > 90.0 || lonDegrees < 0.0 || lonDegrees > 180.0 ||
+                (latDegrees == 90.0 && (latMinutes != 0.0 || latSeconds != 0.0)) ||
+                (lonDegrees == 180.0 && (lonMinutes != 0.0 || lonSeconds != 0.0)) ||
+                !GeographicCoordinateSystem.IsFinite(latDegrees) || !GeographicCoordinateSystem.IsFinite(lonDegrees) ||
+                !GeographicCoordinateSystem.IsFinite(latMinutes) || !GeographicCoordinateSystem.IsFinite(latSeconds) ||
+                !GeographicCoordinateSystem.IsFinite(lonMinutes) || !GeographicCoordinateSystem.IsFinite(lonSeconds))
+            {
+                return false;
+            }
+
+            parsed.LatitudeDegrees = latDegrees;
+            parsed.LatitudeMinutes = latMinutes;
+            parsed.LatitudeSeconds = latSeconds;
+            parsed.LatitudeDirection = latDir;
+            parsed.LongitudeDegrees = lonDegrees;
+            parsed.LongitudeMinutes = lonMinutes;
+            parsed.LongitudeSeconds = lonSeconds;
+            parsed.LongitudeDirection = lonDir;
+            parsed.AltitudeMetres = altitudeMetres;
+            result = parsed;
+
+            return true;
+        }
+
+        internal static bool TryParseDmsCoordinate(string part, bool isLatitude, out double degrees, out double minutes, out double seconds, out char direction)
+        {
+            degrees = 0;
+            minutes = 0;
+            seconds = 0;
+            direction = '\0';
+
+            if (string.IsNullOrWhiteSpace(part))
+            {
+                return false;
+            }
+
+            // Try symbol-delimited format first: "52° 31' 12.00" N"
+            // Pattern: <degrees>° <minutes>' <seconds>" <direction>
+            int degSymbolIdx = part.IndexOf('°');
+            int minSymbolIdx = part.IndexOf('\'');
+            int secSymbolIdx = -1;
+            int dirIdx = -1;
+
+            if (degSymbolIdx >= 0 && minSymbolIdx > degSymbolIdx)
+            {
+                secSymbolIdx = part.IndexOf('"', minSymbolIdx + 1);
+                if (secSymbolIdx >= 0)
+                {
+                    dirIdx = part.IndexOfAny(new[] { 'N', 'n', 'S', 's', 'E', 'e', 'W', 'w' }, secSymbolIdx + 1);
+                }
+            }
+
+            if (degSymbolIdx >= 0 && minSymbolIdx > degSymbolIdx && secSymbolIdx > minSymbolIdx && dirIdx > secSymbolIdx)
+            {
+                string degStr = part.Substring(0, degSymbolIdx).Trim();
+                string minStr = part.Substring(degSymbolIdx + 1, minSymbolIdx - degSymbolIdx - 1).Trim();
+                string secStr = part.Substring(minSymbolIdx + 1, secSymbolIdx - minSymbolIdx - 1).Trim();
+
+                if (!double.TryParse(degStr, NumberStyles.Float, CultureInfo.InvariantCulture, out degrees))
+                {
+                    return false;
+                }
+
+                if (!double.TryParse(minStr, NumberStyles.Float, CultureInfo.InvariantCulture, out minutes))
+                {
+                    return false;
+                }
+
+                if (!double.TryParse(secStr, NumberStyles.Float, CultureInfo.InvariantCulture, out seconds))
+                {
+                    return false;
+                }
+
+                // Determine direction based on coordinate type
+                int lastNOrS = part.LastIndexOfAny(new[] { 'N', 'n', 'S', 's' });
+                int lastEOrW = part.LastIndexOfAny(new[] { 'E', 'e', 'W', 'w' });
+
+                char potentialDir;
+                if (isLatitude)
+                {
+                    // Latitude must end with N or S
+                    if (lastNOrS <= secSymbolIdx) return false;  // Missing direction
+                    char foundDir = part[lastNOrS];
+                    // Validate the found direction is actually N or S (not E or W mistakenly picked up)
+                    if (!GeographicCoordinateSystem.IsValidLatitudeDirection(foundDir)) return false;
+                    potentialDir = foundDir;
+                    direction = char.ToUpperInvariant(potentialDir);
+                }
+                else
+                {
+                    // Longitude must end with E or W
+                    if (lastEOrW <= secSymbolIdx) return false;  // Missing direction
+                    char foundDir = part[lastEOrW];
+                    // Validate the found direction is actually E or W (not N or S mistakenly picked up)
+                    if (!GeographicCoordinateSystem.IsValidLongitudeDirection(foundDir)) return false;
+                    potentialDir = foundDir;
+                    direction = char.ToUpperInvariant(potentialDir);
+                }
+
+                // Validate degrees range per ADR-0008 Section 91-92
+                if (isLatitude && (degrees < -90 || degrees > 90))
+                    return false;
+                if (!isLatitude && (degrees < -180 || degrees > 180))
+                    return false;
+
+                // Validate minutes and seconds range >= 0 per ADR-0008 Section 93-94 (upper bound checked during normalization)
+                if (!GeographicCoordinateSystem.IsFinite(degrees) || !GeographicCoordinateSystem.IsFinite(minutes) ||
+                    !GeographicCoordinateSystem.IsFinite(seconds) || degrees < 0.0 || minutes < 0.0 || seconds < 0.0 ||
+                    minutes > 60.0 || seconds > 60.0 || degrees > (isLatitude ? 90.0 : 180.0))
+                    return false;
+
+                return true;
+            }
+
+            // Try space-delimited format: "52 31 12 N"
+            // Pattern: <integer degrees> <integer minutes> <seconds> <direction>
+            var parts = part.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 4)
+            {
+                string degStr = parts[0];
+                string minStr = parts[1];
+                string secStr = parts[2];
+                string dirStr = parts[3];
+
+                // Degrees and minutes must be integers in space-delimited format
+                if (!double.TryParse(degStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out double parsedDeg))
+                {
+                    return false;
+                }
+                degrees = parsedDeg;
+
+                if (!double.TryParse(minStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out double parsedMin))
+                {
+                    return false;
+                }
+                minutes = parsedMin;
+
+                if (!double.TryParse(secStr, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsedSec))
+                {
+                    return false;
+                }
+                seconds = parsedSec;
+
+                char potentialDir = dirStr[0];
+                if (isLatitude && !GeographicCoordinateSystem.IsValidLatitudeDirection(potentialDir))
+                    return false;
+                if (!isLatitude && !GeographicCoordinateSystem.IsValidLongitudeDirection(potentialDir))
+                    return false;
+
+                direction = char.ToUpperInvariant(potentialDir);
+
+                // Validate degrees range per ADR-0008 Section 91-92
+                if (isLatitude && (degrees < -90 || degrees > 90))
+                    return false;
+                if (!isLatitude && (degrees < -180 || degrees > 180))
+                    return false;
+
+                // Validate minutes and seconds range >= 0 per ADR-0008 Section 93-94 (upper bound checked during normalization)
+                if (dirStr.Length != 1 || !GeographicCoordinateSystem.IsFinite(degrees) ||
+                    !GeographicCoordinateSystem.IsFinite(minutes) || !GeographicCoordinateSystem.IsFinite(seconds) ||
+                    degrees < 0.0 || minutes < 0.0 || seconds < 0.0 || minutes > 60.0 || seconds > 60.0 ||
+                    degrees > (isLatitude ? 90.0 : 180.0))
+                    return false;
+
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }

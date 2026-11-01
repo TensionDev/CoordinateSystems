@@ -102,8 +102,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 52.52,
-                LongitudeDecimalDegrees = 13.405,
+                LatitudeDecimalRadians = 52.52 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.405 * Math.PI / 180.0,
                 AltitudeMetres = 100.5,
             };
 
@@ -124,8 +124,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = -52.52,
-                LongitudeDecimalDegrees = -13.405,
+                LatitudeDecimalRadians = -52.52 * Math.PI / 180.0,
+                LongitudeDecimalRadians = -13.405 * Math.PI / 180.0,
                 AltitudeMetres = 100.5,
             };
 
@@ -146,8 +146,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 0,
-                LongitudeDecimalDegrees = 0,
+                LatitudeDecimalRadians = 0 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 0 * Math.PI / 180.0,
                 AltitudeMetres = 0,
             };
 
@@ -168,8 +168,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 90,
-                LongitudeDecimalDegrees = 0,
+                LatitudeDecimalRadians = 90 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 0 * Math.PI / 180.0,
                 AltitudeMetres = 0,
             };
 
@@ -186,8 +186,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = -90,
-                LongitudeDecimalDegrees = 0,
+                LatitudeDecimalRadians = -90 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 0 * Math.PI / 180.0,
                 AltitudeMetres = 0,
             };
 
@@ -204,8 +204,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 0,
-                LongitudeDecimalDegrees = 0,
+                LatitudeDecimalRadians = 0 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 0 * Math.PI / 180.0,
                 AltitudeMetres = 0,
             };
 
@@ -222,8 +222,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 0,
-                LongitudeDecimalDegrees = 180,
+                LatitudeDecimalRadians = 0 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 180 * Math.PI / 180.0,
                 AltitudeMetres = 0,
             };
 
@@ -232,7 +232,7 @@ namespace TensionDev.CoordinateSystems.Tests
             Assert.Equal(180, result.LongitudeDegrees, POSITIONAL_PRECISION);
             Assert.Equal(0, result.LongitudeMinutes, POSITIONAL_PRECISION);
             Assert.Equal(0, result.LongitudeSeconds, POSITIONAL_PRECISION);
-            Assert.Equal('W', result.LongitudeDirection);
+            Assert.Equal('E', result.LongitudeDirection);
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString();
-            Assert.Equal("52° 31' 12.000000\" S, 13° 24' 18.000000\" W", result);
+            Assert.Equal("52° 31' 12.000000\" S, 13° 24' 18.000000\" W Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -278,7 +278,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString();
-            Assert.Equal("0° 0' 0.000000\" N, 0° 0' 0.000000\" E", result);
+            Assert.Equal("0° 0' 0.000000\" N, 0° 0' 0.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -297,7 +297,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString();
-            Assert.Equal("90° 0' 0.000000\" N, 0° 0' 0.000000\" E", result);
+            Assert.Equal("90° 0' 0.000000\" N, 0° 0' 0.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -305,8 +305,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 1.309432,
-                LongitudeDecimalDegrees = 103.780349,
+                LatitudeDecimalRadians = 1.309432 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 103.780349 * Math.PI / 180.0,
                 AltitudeMetres = 25.0,
             };
 
@@ -344,7 +344,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(0);
-            Assert.Equal("52° 31' 13\" N, 13° 24' 19\" E", result);
+            Assert.Equal("52° 31' 13\" N, 13° 24' 19\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -363,7 +363,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(3);
-            Assert.Equal("52° 31' 12.679\" N, 13° 24' 18.789\" E", result);
+            Assert.Equal("52° 31' 12.679\" N, 13° 24' 18.789\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -382,7 +382,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("52° 31' 12.678901\" N, 13° 24' 18.789012\" E", result);
+            Assert.Equal("52° 31' 12.678901\" N, 13° 24' 18.789012\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -401,7 +401,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(10);
-            Assert.Equal("52° 31' 12.678901\" N, 13° 24' 18.789012\" E", result);
+            Assert.Equal("52° 31' 12.678901\" N, 13° 24' 18.789012\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -420,7 +420,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("52° 32' 0.000000\" N, 13° 24' 18.000000\" E", result);
+            Assert.Equal("52° 32' 0.000000\" N, 13° 24' 18.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -439,7 +439,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("52° 32' 0.000000\" N, 13° 25' 0.000000\" E", result);
+            Assert.Equal("52° 32' 0.000000\" N, 13° 25' 0.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -457,7 +457,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("53° 0' 0.000000\" N, 13° 24' 18.000000\" E", result);
+            Assert.Equal("53° 0' 0.000000\" N, 13° 24' 18.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -476,7 +476,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("53° 0' 0.000000\" N, 14° 0' 0.000000\" E", result);
+            Assert.Equal("53° 0' 0.000000\" N, 14° 0' 0.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -495,7 +495,7 @@ namespace TensionDev.CoordinateSystems.Tests
             };
 
             string result = dms.ToString(6);
-            Assert.Equal("52° 32' 0.000000\" N, 13° 25' 0.000000\" E", result);
+            Assert.Equal("52° 32' 0.000000\" N, 13° 25' 0.000000\" E Altitude: 0.000 m", result);
         }
 
         [Fact]
@@ -658,8 +658,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem source = new GeographicCoordinateSystem
             {
-                LatitudeDecimalDegrees = 1.309432,
-                LongitudeDecimalDegrees = 103.780349,
+                LatitudeDecimalRadians = 1.309432 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 103.780349 * Math.PI / 180.0,
                 AltitudeMetres = 25.0,
             };
 

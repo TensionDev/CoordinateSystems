@@ -41,6 +41,21 @@ namespace TensionDev.CoordinateSystems
                 throw new ArgumentOutOfRangeException(nameof(length), $"GeoHash of length {length} is not supported!");
             }
 
+            double latitude = source.LatitudeDecimalDegrees;
+            double longitude = source.LongitudeDecimalDegrees;
+
+            // CTA-5009-A defines Geohash input coordinates as latitude [-90, 90)
+            // and longitude [-180, 180).
+            if (!(latitude >= -90.0 && latitude < 90.0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(source), "Latitude must be in the range [-90, 90) degrees.");
+            }
+
+            if (!(longitude >= -180.0 && longitude < 180.0))
+            {
+                throw new ArgumentOutOfRangeException(nameof(source), "Longitude must be in the range [-180, 180) degrees.");
+            }
+
             Int32 bitLength = length * GeohashBase32.BitsPerCharacter;
             UInt64 bitNotation = 0;
             Boolean bit;
@@ -57,14 +72,14 @@ namespace TensionDev.CoordinateSystems
                     (longitudeMin, longitudeMax, bit) = BitNotationMultiplication(
                         longitudeMin,
                         longitudeMax,
-                        source.LongitudeDecimalDegrees);
+                    longitude);
                 }
                 else
                 {
                     (latitudeMin, latitudeMax, bit) = BitNotationMultiplication(
                         latitudeMin,
                         latitudeMax,
-                        source.LatitudeDecimalDegrees);
+                    latitude);
                 }
 
                 bitNotation <<= 1;

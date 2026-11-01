@@ -102,12 +102,8 @@ namespace TensionDev.CoordinateSystems
 
             for (Int32 i = 0; i < hash.Length; ++i)
             {
+                // IsValid guarantees each character belongs to the Base32 alphabet.
                 Int32 value = Alphabet.IndexOf(hash[i]);
-
-                if (value < 0)
-                {
-                    throw new InvalidOperationException("GeoHash is not based on Geohash Base32.");
-                }
 
                 bitStream <<= BitsPerCharacter;
                 bitStream += (UInt64)value;

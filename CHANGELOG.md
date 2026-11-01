@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added `GeographicDd` as a decimal-degree coordinate representation.
+- Added standard `Parse` and `TryParse` methods for `GeographicCoordinateSystem`, `GeographicDd`, `GeocentricCoordinateSystem`, `GeographicDdm`, and `GeographicDms`, implementing ADR-0008's representation-specific formats and validation.
+- Added parsing for optional altitude suffixes, invariant-culture numeric values, and explicitly marked radians; bare geographic numeric pairs are decimal degrees.
+- Added conversions in both directions between every distinct pair of `GeographicCoordinateSystem`, `GeographicDd`, `GeographicDdm`, and `GeographicDms`.
+- Added metre-based altitude properties and optional altitude parsing to decimal-degree, DDM, and DMS representations.
+
+### Changed
+- Made radians the canonical angular unit inside `GeographicCoordinateSystem`; its degree properties remain available as explicit conversions.
+- Defined bare numeric latitude/longitude pairs as decimal degrees. Radian strings now require the `rad` marker.
+- Geographic parsing now rejects invalid and out-of-range coordinates instead of silently changing their values.
+
 
 ## [v0.4.0] - 2026-09-20
 [v0.4.0](https://github.com/TensionDev/CoordinateSystems/releases/tag/v0.4.0)

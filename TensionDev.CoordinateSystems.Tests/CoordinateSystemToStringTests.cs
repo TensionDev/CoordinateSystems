@@ -18,8 +18,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -32,8 +32,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -46,8 +46,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -60,8 +60,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -74,13 +74,13 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
             string result = geographicCoordinateSystem.ToString(AngularFormat.Radians, DistanceUnit.Metres);
-            Assert.Equal("0.916647, 0.233961 Altitude: 100.500 m", result);
+            Assert.Equal("0.916647 rad, 0.233961 rad Altitude: 100.500 m", result);
         }
 
         [Fact]
@@ -88,8 +88,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -130,8 +130,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = -52.5200,
-                LongitudeDecimalDegrees = -13.4050,
+                LatitudeDecimalRadians = -52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = -13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -144,8 +144,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 0,
-                LongitudeDecimalDegrees = 0,
+                LatitudeDecimalRadians = 0 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 0 * Math.PI / 180.0,
                 AltitudeMetres = 0
             };
 
@@ -158,8 +158,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
@@ -186,8 +186,8 @@ namespace TensionDev.CoordinateSystems.Tests
         {
             GeographicCoordinateSystem geographicCoordinateSystem = new GeographicCoordinateSystem()
             {
-                LatitudeDecimalDegrees = 52.5200,
-                LongitudeDecimalDegrees = 13.4050,
+                LatitudeDecimalRadians = 52.5200 * Math.PI / 180.0,
+                LongitudeDecimalRadians = 13.4050 * Math.PI / 180.0,
                 AltitudeMetres = 100.5
             };
 
